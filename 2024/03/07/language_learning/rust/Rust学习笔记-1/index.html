@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="/css/layout.css">
 
 		
-		<title> angr_1 -  lancer0rz&#39;s blog</title>
+		<title> Rust学习笔记_1 -  lancer0rz&#39;s blog</title>
 		<!-- <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" /> -->
 		<!-- <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script> -->
 		
@@ -324,40 +324,34 @@
 <div class="kira-post">
 	<article>
 		
-		<div class="kira-post-cover">
+		<div
+			class="kira-post-cover"
+			style="padding-bottom: '53.30882352941176%'"
+		>
 			<img
-				data-src="https://cdn.jsdelivr.net/gh/lancer0rz/image_host@img/img/v2-ee6bfec87c74428f8e769cf03f19a86b_1440w.png"
+				data-src="https://www.z4a.net/images/2023/12/13/2022-11-29-085630.jpg"
 				data-sizes="auto"
-				alt="angr_1"
+				alt="Rust学习笔记_1"
 				class="lazyload kira-post-cover-image disabled-kira-image"
 			/>
-			<h1>angr_1</h1>
+			<h1>Rust学习笔记_1</h1>
 		</div>
 		
 		<div class="kira-post-meta kira-rainbow" style="margin:10px 0!important;">
-			<a><i class="kirafont icon-calendar-fill"></i>2023年12月13日</a>
-			<a><i class="kirafont icon-edit-fill"></i>405 字</a>
+			<a><i class="kirafont icon-calendar-fill"></i>2024年03月07日</a>
+			<a><i class="kirafont icon-edit-fill"></i>122 字</a>
 			<a><i class="kirafont icon-time-circle-fill"></i>大概 1 分钟</a>
 		</div>
-		<p>系统学习一下angr</p>
-<h4><span id="1简单介绍">1.简单介绍</span></h4><p>angr是一个二进制代码分析工具，能够自动化完成二进制文件的分析，并找出漏洞。在二进制代码中寻找并且利用漏洞是一项非常具有挑战性的工作，它的挑战性主要在于人工很难直观的看出二进制代码中的数据结构、控制流信息等。angr是一个基于python的二进制漏洞分析框架，它将以前多种分析技术集成进来，­­­它能够进行动态的符号执行分析（如，KLEE和Mayhem），也能够进行多种静态分析。</p>
-<p>在ctf的一些情况下，我们有时候可以使用angr来进行自动化的求解flag，而不必去逆向复杂的算法。</p>
-<h4><span id="2安装">2.安装</span></h4><p>angr的安装比较麻烦，需要安装必要的虚拟环境。（我kali上花了一周才配好）</p>
-<p>这里贴一篇博客<a target="_blank" rel="noopener" href="https://blog.csdn.net/prettyX/article/details/110438581?ops_request_misc=%7B%22request_id%22:%22170720924216800213097694%22,%22scm%22:%2220140713.130102334..%22%7D&request_id=170720924216800213097694&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-110438581-null-null.142%5Ev99%5Epc_search_result_base4&utm_term=angr%E5%AE%89%E8%A3%85&spm=1018.2226.3001.4187">Angr 安装-CSDN博客</a></p>
-<p>同时，我目前的使用是在pycharm上一把梭（记得新建一个项目以免影响环境）</p>
-<h4><span id="3简单使用">3.简单使用</span></h4><p>使用题目<a target="_blank" rel="noopener" href="https://github.com/jakespringer/angr_ctf">GitHub - jakespringer&#x2F;angr_ctf</a></p>
-<p>00_angr_find</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> angr<br>p=angr.Project(<span class="hljs-string">&quot;C:\\Users\\lenovo\\Desktop\\ctf_poem\\_study\\angr\\angr_ctf-master\\dist\\00_angr_find&quot;</span>)<br>init_state=p.factory.entry_state()<br>sm=p.factory.simulation_manager(init_state)<br>find_add=<span class="hljs-number">0x804867D</span><br>sm.explore(find=find_add)<br><span class="hljs-keyword">if</span> sm.found:<br>    found_state=sm.found[<span class="hljs-number">0</span>]<br>    <span class="hljs-built_in">print</span>(found_state.posix.dumps(<span class="hljs-number">0</span>))<span class="hljs-comment">#0是输入，1是输出</span><br><span class="hljs-keyword">else</span> :<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;err!&quot;</span>)<br></code></pre></td></tr></table></figure>
+		<p>rust魔改tea加密算法实现</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">tea</span>(v: &amp;<span class="hljs-keyword">mut</span> [<span class="hljs-type">i64</span>; <span class="hljs-number">26</span>], k: &amp;[<span class="hljs-type">i64</span>; <span class="hljs-number">4</span>]) &#123;<br>    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">x</span>=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">y</span>=<span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">while</span> x!=<span class="hljs-number">26</span> &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">v0</span> = v[x];<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">v1</span> = v[y];<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut </span><span class="hljs-variable">sum</span>:<span class="hljs-type">i64</span> = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">delta</span> = <span class="hljs-number">0x19198100</span>;<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">k0</span> = k[<span class="hljs-number">0</span>];<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">k1</span> = k[<span class="hljs-number">1</span>];<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">k2</span> = k[<span class="hljs-number">2</span>];<br>        <span class="hljs-keyword">let</span> <span class="hljs-variable">k3</span> = k[<span class="hljs-number">3</span>];<br><br>        <span class="hljs-keyword">for</span> <span class="hljs-variable">_</span> <span class="hljs-keyword">in</span> <span class="hljs-number">0</span>..<span class="hljs-number">32</span> &#123;<br>            sum = sum.<span class="hljs-title function_ invoke__">wrapping_add</span>(delta);<br>            v0 = v0.<span class="hljs-title function_ invoke__">wrapping_add</span>(((v1 &lt;&lt; <span class="hljs-number">4</span>) + k0) ^ (v1.<span class="hljs-title function_ invoke__">wrapping_add</span>(sum)) ^ ((v1 &gt;&gt; <span class="hljs-number">5</span>) + k1));<br>            v1 = v1.<span class="hljs-title function_ invoke__">wrapping_add</span>(((v0 &lt;&lt; <span class="hljs-number">4</span>) + k2) ^ (v0.<span class="hljs-title function_ invoke__">wrapping_add</span>(sum)) ^ ((v0 &gt;&gt; <span class="hljs-number">5</span>) + k3));<br>        &#125;<br><br>        v[x] = v0;<br>        v[y] = v1;<br><br>        x+=<span class="hljs-number">2</span>;<br>        y+=<span class="hljs-number">2</span>;<br>    &#125;<br>    <br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>01_angr_avoid</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> angr<br>p=angr.Project(<span class="hljs-string">&quot;C:\\Users\\lenovo\\Desktop\\ctf_poem\\_study\\angr\\angr_ctf-master\\dist\\01_angr_avoid&quot;</span>)<br>init_state=p.factory.entry_state()<br>sm=p.factory.simulation_manager(init_state)<br>find_add=<span class="hljs-number">0x80485BB</span><br>sm.explore(find=find_add,avoid=<span class="hljs-number">0x80485AB</span>)<br><span class="hljs-keyword">if</span> sm.found:<br>    found_state=sm.found[<span class="hljs-number">0</span>]<br>    <span class="hljs-built_in">print</span>(found_state.posix.dumps(<span class="hljs-number">0</span>))<span class="hljs-comment">#0是输入，1是输出</span><br><span class="hljs-keyword">else</span> :<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;err!&quot;</span>)<br></code></pre></td></tr></table></figure>
 
 	</article>
 
 	 
     <div class="kira-post-copyright">
         <strong>本文作者：</strong>lancer0rz<br>
-        <strong>本文链接：</strong><a href="http://example.com/2023/12/13/angr_1/" title="http:&#x2F;&#x2F;example.com&#x2F;2023&#x2F;12&#x2F;13&#x2F;angr_1&#x2F;" target="_blank" rel="noopener">http:&#x2F;&#x2F;example.com&#x2F;2023&#x2F;12&#x2F;13&#x2F;angr_1&#x2F;</a><br>
+        <strong>本文链接：</strong><a href="http://example.com/2024/03/07/language_learning/rust/Rust%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-1/" title="http:&#x2F;&#x2F;example.com&#x2F;2024&#x2F;03&#x2F;07&#x2F;language_learning&#x2F;rust&#x2F;Rust学习笔记-1&#x2F;" target="_blank" rel="noopener">http:&#x2F;&#x2F;example.com&#x2F;2024&#x2F;03&#x2F;07&#x2F;language_learning&#x2F;rust&#x2F;Rust学习笔记-1&#x2F;</a><br>
         
             <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
         
@@ -373,7 +367,7 @@
 	<div class="kira-post-meta kira-rainbow">
 		
 		
-			<a class="kirafont icon-tag-fill -none-link" href="/tags/%E9%80%86%E5%90%91/" rel="tag">逆向</a>
+			<a class="kirafont icon-tag-fill -none-link" href="/tags/%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">语言学习</a>
 		
 	</div>
 	
