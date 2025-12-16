@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBVxxxxx" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D6xxxxxxxxxxxxxxxx" />
+    <meta name="description" content="z 最近想重拾一下pwn，发现wsl环境炸了gdb起不来。加上杂七杂八的环境非常的杂乱，遂重装，顺便记录一下踩坑过程。 卸载这个简单 12wsl --list wsl --unregister Ubuntu-22.03  因为我之前已经设置了wsl的安装系统存储位置，如有需要请参照下面链接Win10&#x2F;11下安装WSL并修改WSL默认安装目录到其他盘_wsl设置默认路径-CSDN博客 重新">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wsl-ubuntu 个人环境配置指南">
+<meta property="og:url" content="http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="l4n&#39;s blog">
+<meta property="og:description" content="z 最近想重拾一下pwn，发现wsl环境炸了gdb起不来。加上杂七杂八的环境非常的杂乱，遂重装，顺便记录一下踩坑过程。 卸载这个简单 12wsl --list wsl --unregister Ubuntu-22.03  因为我之前已经设置了wsl的安装系统存储位置，如有需要请参照下面链接Win10&#x2F;11下安装WSL并修改WSL默认安装目录到其他盘_wsl设置默认路径-CSDN博客 重新">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-07-23T14:36:19.000Z">
+<meta property="article:modified_time" content="2025-07-31T19:01:30.448Z">
+<meta property="article:author" content="l4n">
+<meta property="article:tag" content="杂七杂八">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/avatar.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/avatar.jpg" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg">
+        
+      
+    
+    <!-- title -->
+    <title>wsl-ubuntu 个人环境配置指南</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/Friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/Search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/About/">About</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2025/08/01/%E5%85%AB%E6%9C%88%E6%9D%82%E8%B0%88/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/03/31/%E5%AF%84%E5%AD%98%E5%99%A8%E9%97%B4%E6%8E%A5%E8%B7%B3%E8%BD%AC%E6%B7%B7%E6%B7%86%E5%8E%BB%E9%99%A4%E5%AE%9E%E6%88%98/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&text=wsl-ubuntu 个人环境配置指南"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&is_video=false&description=wsl-ubuntu 个人环境配置指南"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=wsl-ubuntu 个人环境配置指南&body=Check out this article: http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&name=wsl-ubuntu 个人环境配置指南&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&t=wsl-ubuntu 个人环境配置指南"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%B8%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">卸载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E6%96%B0%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">重新安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">基本环境配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85conda"><span class="toc-number">2.2.</span> <span class="toc-text">安装conda</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        wsl-ubuntu 个人环境配置指南
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">l4n</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-07-23T14:36:19.000Z" class="dt-published" itemprop="datePublished">2025-07-23</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" rel="tag">杂七杂八</a> -->
+        <a class="category-link" href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" rel="tag">杂七杂八</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>z</p>
+<p>最近想重拾一下pwn，发现wsl环境炸了gdb起不来。加上杂七杂八的环境非常的杂乱，遂重装，顺便记录一下踩坑过程。</p>
+<h3 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h3><p>这个简单</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsl --list </span><br><span class="line">wsl --unregister Ubuntu-22.03</span><br></pre></td></tr></table></figure>
+
+<p>因为我之前已经设置了wsl的安装系统存储位置，如有需要请参照下面链接<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/farer_yyh/article/details/133934904">Win10&#x2F;11下安装WSL并修改WSL默认安装目录到其他盘_wsl设置默认路径-CSDN博客</a></p>
+<h3 id="重新安装"><a href="#重新安装" class="headerlink" title="重新安装"></a>重新安装</h3><p>直接应用商店里安装即可</p>
+<p>这里列一些wsl常用命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">wsl常用命令：</span><br><span class="line"> 查看WSL帮助：wsl --help</span><br><span class="line"> 更新WSL：wsl --update</span><br><span class="line"> 查看微软官方提供的子系统：wsl -l -o 或者 wsl --list --online </span><br><span class="line"> 安装子系统：wsl --install -d Ubuntu-20.04</span><br><span class="line"> 设置Ubuntu20.04为默认子系统：wsl --set-default Ubuntu-20.04 或者 wsl -s Ubuntu-20.04</span><br><span class="line"> 将 wsl2 设为默认版本：wsl --set-default-version 2</span><br><span class="line"> 将 Ubuntu 设为 wsl2：wsl --set-version ubuntu 2</span><br><span class="line"> 查看状态，包括当前的默认子系统是哪个、wsl 的版本是 1 还是 2、内核版本等：wsl --status</span><br><span class="line"> 查看详细信息，包括安装了哪些子系统、子系统的运行状态、wsl1 还是 wsl2：wsl --list --verbose  // 可简写为 wsl -l -v，非常常用！</span><br><span class="line"> 直接运行子系统命令：wsl -d ubuntu ls // 如果是在默认子系统中运行命令，可省略 -d &lt;Distro&gt;，例如：wsl ls</span><br><span class="line"> 关闭某个子系统：wsl --terminate &lt;Distro&gt; // --terminate 可简写为 -t，&lt;Distro&gt; 不能省。// 例如，关闭 Ubuntu：wsl -t ubuntu</span><br><span class="line"> 关闭所有子系统： wsl --shutdown</span><br><span class="line"> 卸载某个子系统：wsl --unregister &lt;Distro&gt; // 例如，卸载 Ubuntu：wsl --unregister ubuntu</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="基本环境配置"><a href="#基本环境配置" class="headerlink" title="基本环境配置"></a>基本环境配置</h4><p>设置默认root登录 （或者你可以在wsl.conf里配置）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubuntu2204.exe config --default-user root</span><br></pre></td></tr></table></figure>
+
+<p>换源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+
+<p>写入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释</span><br><span class="line">deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial main restricted universe multiverse</span><br><span class="line"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial main restricted universe multiverse</span><br><span class="line">deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-updates main restricted universe multiverse</span><br><span class="line"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-updates main restricted universe multiverse</span><br><span class="line">deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-backports main restricted universe multiverse</span><br><span class="line"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-backports main restricted universe multiverse</span><br><span class="line">deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-security main restricted universe multiverse</span><br><span class="line"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-security main restricted universe multiverse</span><br><span class="line"> </span><br><span class="line"># 预发布软件源，不建议启用</span><br><span class="line"># deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-proposed main restricted universe multiverse</span><br><span class="line"># deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-proposed main restricted universe multiverse</span><br></pre></td></tr></table></figure>
+
+<p>更新</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+
+<p>安装zsh 与oh-my-zsh全套美化</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install zsh</span><br><span class="line"></span><br><span class="line">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot; </span><br><span class="line"></span><br><span class="line">git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $&#123;ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom&#125;/themes/powerlevel10k</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>设置默认终端为zsh</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br></pre></td></tr></table></figure>
+
+<p>安装编译工具链</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install build-essential</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="安装conda"><a href="#安装conda" class="headerlink" title="安装conda"></a>安装conda</h4><p>我选择miniconda 比较轻量<br>可以直接看官方文档<br><a target="_blank" rel="noopener" href="https://www.anaconda.com/docs/getting-started/miniconda/install#linux-2">Installing Miniconda - Anaconda</a></p>
+<p>也可以看下面的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/miniconda3</span><br><span class="line">wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh</span><br><span class="line">bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3</span><br><span class="line">rm ~/miniconda3/miniconda.sh</span><br><span class="line">source ~/miniconda3/bin/activate</span><br><span class="line">conda init --all</span><br></pre></td></tr></table></figure>
+
+<p>换源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#设置清华镜像</span><br><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</span><br><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/</span><br><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/</span><br><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda/</span><br><span class="line">#设置bioconda</span><br><span class="line">conda config --add channels bioconda</span><br><span class="line">conda config --add channels conda-forge</span><br><span class="line">#设置搜索时显示通道地址</span><br><span class="line">conda config --set show_channel_urls yes</span><br></pre></td></tr></table></figure>
+
+<p>创建虚拟环境</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create -n env_name python=3.12</span><br></pre></td></tr></table></figure>
+
+<p>启用虚拟环境&#x2F;查询虚拟环境</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda env list</span><br><span class="line">conda activate xxx</span><br></pre></td></tr></table></figure>
+
+<p>pip换源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 清华源</span><br><span class="line">pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</span><br><span class="line"># 阿里源</span><br><span class="line">pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line"># 腾讯源</span><br><span class="line">pip config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple</span><br><span class="line"># 豆瓣源</span><br><span class="line">pip config set global.index-url http://pypi.douban.com/simple/</span><br><span class="line"># 换回默认源</span><br><span class="line">pip config unset global.index-url</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/Friends/">Friends</a></li>
+        
+          <li><a href="/Search/">Search</a></li>
+        
+          <li><a href="/About/">About</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%B8%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">卸载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E6%96%B0%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">重新安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">基本环境配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85conda"><span class="toc-number">2.2.</span> <span class="toc-text">安装conda</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&text=wsl-ubuntu 个人环境配置指南"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&is_video=false&description=wsl-ubuntu 个人环境配置指南"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=wsl-ubuntu 个人环境配置指南&body=Check out this article: http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&name=wsl-ubuntu 个人环境配置指南&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&t=wsl-ubuntu 个人环境配置指南"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2025
+    l4n
+  </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/Friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/Search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/About/">About</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>
