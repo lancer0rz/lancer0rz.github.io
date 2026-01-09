@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBVxxxxx" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D6xxxxxxxxxxxxxxxx" />
+    <meta name="description" content="1. 引言 所谓编译，就是高级语言转换为目标程序代码的过程 分为五部分 词法分析：分析源程序构成的字符串，转化为一个个的单词，留待下一步分析 语法分析：根据语言语法规则，把单词合成语法单位，如句子等 语义分析及IR的生成：根据第二步的语法分析，将其翻译成中间代码 中间代码一般含义明确   代码优化：这一步的任务是对第三步的中间代码进行等价变换，节省时间空间 目标代码生成：中间代码变成特定机器上的机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译原理期末复习">
+<meta property="og:url" content="https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/index.html">
+<meta property="og:site_name" content="l4n&#39;s blog">
+<meta property="og:description" content="1. 引言 所谓编译，就是高级语言转换为目标程序代码的过程 分为五部分 词法分析：分析源程序构成的字符串，转化为一个个的单词，留待下一步分析 语法分析：根据语言语法规则，把单词合成语法单位，如句子等 语义分析及IR的生成：根据第二步的语法分析，将其翻译成中间代码 中间代码一般含义明确   代码优化：这一步的任务是对第三步的中间代码进行等价变换，节省时间空间 目标代码生成：中间代码变成特定机器上的机">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104135017006.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104134958248.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104135030549.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104135045264.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104143554788.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104153257598.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104153641349.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104163358458.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104163529585.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104164038545.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104164652486.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104170252535.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104170335688.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104173955136.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104175137162.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104195119849.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104202849834.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260105132308984.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260105142142547.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260106142934782.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260106142940871.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260106191615768.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260106200807972.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107103959401.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107104049991.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107105640459.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107105835514.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107105743885.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107123417697.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107132642591.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107132846824.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107132831741.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107133205604.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107133359144.png">
+<meta property="article:published_time" content="2026-01-02T06:33:31.000Z">
+<meta property="article:modified_time" content="2026-01-07T11:09:47.992Z">
+<meta property="article:author" content="l4n">
+<meta property="article:tag" content="课内">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104135017006.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/avatar.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/avatar.jpg" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg">
+        
+      
+    
+    <!-- title -->
+    <title>编译原理期末复习</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/Friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/Search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/About/">About</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/12/16/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&text=编译原理期末复习"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&title=编译原理期末复习"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&is_video=false&description=编译原理期末复习"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=编译原理期末复习&body=Check out this article: https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&title=编译原理期末复习"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&title=编译原理期末复习"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&title=编译原理期末复习"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&title=编译原理期末复习"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&name=编译原理期末复习&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&t=编译原理期末复习"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">1. 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80"><span class="toc-number">2.</span> <span class="toc-text">2. 形式语言理论基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">2.1.</span> <span class="toc-text">形式语言基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E4%B8%B2%E8%BF%90%E7%AE%97"><span class="toc-number">2.1.1.</span> <span class="toc-text">符号串运算</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%B3%95%E5%92%8C%E8%AF%AD%E8%A8%80%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%AE%9A%E4%B9%89"><span class="toc-number">2.2.</span> <span class="toc-text">文法和语言的形式定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%91%E5%92%8C%E4%BA%8C%E4%B9%89%E6%80%A7"><span class="toc-number">2.3.</span> <span class="toc-text">语法树和二义性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%B3%95%E5%92%8C%E8%AF%AD%E8%A8%80%E7%9A%84Chomsky%E5%88%86%E7%B1%BB"><span class="toc-number">2.4.</span> <span class="toc-text">文法和语言的Chomsky分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%87%AA%E5%8A%A8%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80"><span class="toc-number">3.</span> <span class="toc-text">3.自动机理论基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA"><span class="toc-number">3.1.</span> <span class="toc-text">有限自动机</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E5%88%86%E5%89%B2%E7%BA%BF%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94"><span class="toc-number"></span> <span class="toc-text">————————————————————分割线——————————————————————</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#FIRST-FOLLOW%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">FIRST FOLLOW集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-FIRST-%E9%9B%86%E7%9A%84%E6%B1%82%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">一、 FIRST 集的求法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-FOLLOW-%E9%9B%86%E7%9A%84%E6%B1%82%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">二、 FOLLOW 集的求法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LL1%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">LL1：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DFA-NFA"><span class="toc-number"></span> <span class="toc-text">DFA NFA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LR0-SLR1"><span class="toc-number"></span> <span class="toc-text">LR0 SLR1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LR1"><span class="toc-number"></span> <span class="toc-text">LR1</span></a>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        编译原理期末复习
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">l4n</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2026-01-02T06:33:31.000Z" class="dt-published" itemprop="datePublished">2026-01-02</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/%E8%AF%BE%E5%86%85/" rel="tag">课内</a> -->
+        <a class="category-link" href="/tags/%E8%AF%BE%E5%86%85/" rel="tag">课内</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><ul>
+<li>所谓编译，就是高级语言转换为目标程序代码的过程</li>
+<li>分为五部分<ul>
+<li>词法分析：分析源程序构成的字符串，转化为一个个的单词，留待下一步分析</li>
+<li>语法分析：根据语言语法规则，把单词合成语法单位，如句子等</li>
+<li>语义分析及IR的生成：根据第二步的语法分析，将其翻译成中间代码<ul>
+<li>中间代码一般含义明确</li>
+</ul>
+</li>
+<li>代码优化：这一步的任务是对第三步的中间代码进行等价变换，节省时间空间</li>
+<li>目标代码生成：中间代码变成特定机器上的机器代码</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-形式语言理论基础"><a href="#2-形式语言理论基础" class="headerlink" title="2. 形式语言理论基础"></a>2. 形式语言理论基础</h2><h3 id="形式语言基本概念"><a href="#形式语言基本概念" class="headerlink" title="形式语言基本概念"></a>形式语言基本概念</h3><p>形式语言，顾名思义，我们只关心语言的“形式”，不关心具体含义</p>
+<ul>
+<li>形式语言是一种不考虑含义的符号语言</li>
+<li>形式语言主要研究：如何用严谨的数学规则来定义、产生和识别字符串的集合</li>
+</ul>
+<p>符号：语言中最小的不可再分的基本单位<br>符号串：符号的有序序列，空字符串记作ε （ε不是空格）<br>字母表：非空的有限集合，集合里是符号即字母表的元素<br>符号串集合：代表了利用字母表能拼凑出的<strong>所有可能</strong>的字符串</p>
+<p>我们给出语言&#x2F;形式语言的具体定义：<br>语言&#x2F;形式语言：字母表上所有符号串组成的集合的子集，用L表示。</p>
+<ul>
+<li>语言是符号串集合的任意一个子集</li>
+</ul>
+<h4 id="符号串运算"><a href="#符号串运算" class="headerlink" title="符号串运算"></a>符号串运算</h4><ul>
+<li>符号串相等：必须所有符号依次相等</li>
+<li>字符串长度：符号串中包含字符的长度</li>
+<li>符号串连接：ab*bc &#x3D; abbc</li>
+<li>符号串的逆：倒置，abc -1 &#x3D; cba   ε-1 &#x3D; ε</li>
+<li>符号串的前缀，后缀，字串：以abc举例<ul>
+<li>前缀：ε a ab abc</li>
+<li>后缀：ε c bc abc</li>
+<li>子串：ε a b c ab bc abc</li>
+</ul>
+</li>
+<li>符号串集合的乘积：A&#x3D;{ab，bc}，B&#x3D;{bc，b}<ul>
+<li>AB&#x3D;{abbc，abb，babc，bab}</li>
+<li>{ε}A&#x3D;A{ε}&#x3D;A</li>
+</ul>
+</li>
+<li>符号串的幂：ω0&#x3D;ε；ω1&#x3D;ω；ω2&#x3D;ωω；……；ωn&#x3D;ωn-1ω<ul>
+<li>ω&#x3D;ab<ul>
+<li>ω0&#x3D;ε<ul>
+<li>ω1&#x3D;ab<ul>
+<li>ωn&#x3D;abab……ab</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>符号串集合的幂：A0&#x3D;{ε}；A1&#x3D;A；……；An&#x3D;An-1A&#x3D;AAn-1  (n&gt;0)<ul>
+<li>例：A&#x3D;{ab, c}</li>
+<li>A0&#x3D;{ε}，A1&#x3D;{ab, c}，A2&#x3D;{abc, cab, abab, cc}</li>
+</ul>
+</li>
+<li>集合A的闭包和正闭包：<ul>
+<li><strong>闭包 (Closure)</strong> 指的是通过某种运算，将一个集合扩展到“包含所有可能结果”的完整状态。</li>
+<li>星闭包 A* &#x3D;A0 ∪ A1 ∪ ……       A+&#x3D;AA*&#x3D;A*A</li>
+<li>正闭包 A+&#x3D;A1 ∪ A2 ∪ ……       A*&#x3D; A0 ∪ A+ </li>
+<li>正闭包不包含空串</li>
+</ul>
+</li>
+</ul>
+<h3 id="文法和语言的形式定义"><a href="#文法和语言的形式定义" class="headerlink" title="文法和语言的形式定义"></a>文法和语言的形式定义</h3><p>再给一遍定义：</p>
+<ul>
+<li><p>语言：所有句子组成的集合，有限集：枚举，无限集：文法</p>
+</li>
+<li><p>句子：抽象看成某个有限字符表上的字符串。</p>
+</li>
+<li><p>文法：形式上描述和规定语言结构的方法，用有限的手段描述无限的句子集合的方法之一</p>
+<ul>
+<li>文法是一个四元组：<ul>
+<li>G&#x3D;（VN，VT，S，P）记为G[S]。V是字汇表，V&#x3D; VT∪VN，S∈VN，VT∩VN&#x3D;Φ</li>
+<li>Vt：终结符号集，字母，最终成果，不可以被分解替换</li>
+<li>Vn：非终结符号集合，中间变量，用来推到最终句子</li>
+<li>S：开始符号：推导起点，通过S一步步变换成最终的集合</li>
+<li>P：产生式&#x2F;规则集合：形式是U ::&#x3D; X  代表U可以被改写成X</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>巴斯克范式：</p>
+<ul>
+<li><p>BNF文法（Backus-Naur Form），用来描述编程语言语法的一种数学表示法</p>
+</li>
+<li><pre><code>&lt;digit&gt; ::= &quot;0&quot; | &quot;1&quot; | &quot;2&quot; | &quot;3&quot; | &quot;4&quot; | &quot;5&quot; | &quot;6&quot; | &quot;7&quot; | &quot;8&quot; | &quot;9&quot;
+&lt;integer&gt; ::= &lt;digit&gt; | &lt;digit&gt; &lt;integer&gt;
+</code></pre>
+</li>
+<li><p>第一行定义数字可以是0到9的任意一个</p>
+<ul>
+<li><p><strong><code>&lt;符号&gt;</code> ::&#x3D; <code>&lt;表达式&gt;</code></strong></p>
+</li>
+<li><p><strong><code>&lt;符号&gt;</code>（非终结符）</strong>：表示可以继续分解的概念（如“数字”、“运算符”）。</p>
+</li>
+<li><p><strong><code>::=</code></strong>：意思是“定义为”或“由…组成”。</p>
+</li>
+<li><p><strong><code>&lt;表达式&gt;</code></strong>：包含终结符（直接出现的字符）和其他非终结符。</p>
+</li>
+<li><p><strong><code>|</code></strong>：表示“或”，即多种可能的选择。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>句型：文法G[S]，G&#x3D;（VN，VT，S，P）    </p>
+<ul>
+<li>由S推出的符号串X∈(VT∪VN)*称为句型。</li>
+<li>推导 规约 | 箭头表示 箭头下加三角代表规约<ul>
+<li>A-&gt;a 是一个规则，p1&#x3D;bAb p2&#x3D;bab 所以p1直接推导出p2 p2直接规约到p1</li>
+<li>如果经过序列推导，那么就称为推导&#x2F;规约，箭头上带个加号<img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104135017006.png" alt="image-20260104135017006"></li>
+<li>如果a可以推导b 或者a&#x3D;b 那么称为a广义推导b，<img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104134958248.png" alt="image-20260104134958248"></li>
+<li>规范推导：每次替换最后边非终结符的直接推导 <img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104135030549.png" alt="image-20260104135030549"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>语言</p>
+<ul>
+<li>文法G 产生的语言L(G) <ul>
+<li><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104135045264.png" alt="image-20260104135045264"></li>
+</ul>
+</li>
+<li>空语言：由文法开始符号推不出任何句子</li>
+<li>给定一个文法，就能从结构上唯一确定其语言，给定语言可以推出文法 但不唯一</li>
+</ul>
+</li>
+</ul>
+<h3 id="语法树和二义性"><a href="#语法树和二义性" class="headerlink" title="语法树和二义性"></a>语法树和二义性</h3><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104143554788.png" alt="image-20260104143554788"></p>
+<ul>
+<li>子树<ul>
+<li>简单子树：只有两层的树</li>
+<li>简单短语：简单子树的叶子节点</li>
+</ul>
+</li>
+</ul>
+<p>二义性：一个句子有两个不同的语法树</p>
+<ul>
+<li>若文法所定义的某个句子,有两种不同的最左(or最右) 推导&#x2F;规约，则具有二义性<ul>
+<li>最左&#x2F;右推导&#x2F;规约：每次选择最左&#x2F;右的非终结符进行推导&#x2F;规约</li>
+</ul>
+</li>
+<li>二义性导致语义不确定性，句子一样，但是可以有两种语法解释</li>
+<li>解决<ul>
+<li>修改编译算法</li>
+<li>修改文法，加入优先层等</li>
+</ul>
+</li>
+<li>不存在一种算法在有限步内判断二义性<ul>
+<li>在计算机科学中，我们无法写出一个通用的程序（算法），让它输入任意一个上下文无关文法（CFG），然后告诉我们这个文法“是”还是“不是”二义性的。</li>
+</ul>
+</li>
+<li>规则左部的符号在右部同时出现两次 or 两次以上，导致二义性<ul>
+<li>这里的“规则”指推导式（Production Rule）。如果一个非终结符（左部）在推导出的结果（右部）中出现了多次，且没有明确的优先级或结合律限制，就很容易产生二义性</li>
+</ul>
+</li>
+<li>先天二义性文法<ul>
+<li>如果一个上下文无关语言（CFL）的所有文法都是二义性的，那么这个语言就称为<strong>先天二义性语言</strong>，而生成该语言的文法即为<strong>先天二义性文法</strong>。</li>
+<li>如果一个语言 L，<strong>没有任何</strong>非二义性的文法可以生成它，那么 L 就是先天二义性的。</li>
+</ul>
+</li>
+</ul>
+<p>有害规则 多余规则</p>
+<ul>
+<li><p>A-&gt;A 二义性</p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104153257598.png" alt="image-20260104153257598"></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104153641349.png" alt="image-20260104153641349"></p>
+</li>
+</ul>
+<p>如果一个文法没有有害&#x2F;多余规则 那么这个文法称为压缩 化简过的</p>
+<p>扩充文法：<img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104163358458.png" alt="image-20260104163358458"></p>
+<p>类似头节点</p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104163529585.png" alt="image-20260104163529585"></p>
+<p>这个是要确保每一个非终结符都要能够推出纯粹的终结符字符串</p>
+<ul>
+<li>首先去遍历产生式，把所有推出来全终结符的非终结符收起来</li>
+<li>然后递归，看谁能推出来上一步得到的集合U终结符集合构成的串。可以就加入 然后继续这一步骤</li>
+<li>最后删除掉不在Vn中的非终结符（清理多余规则</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104164038545.png" alt="image-20260104164038545"></p>
+<p>这个要确保删掉那些从“开始符号”出发，无论如何也推导不到的符号和规则。</p>
+<ul>
+<li>从S开始推 递推找到所有有用的非终结符</li>
+<li>找完后 看哪些非终结符是没用的 直接删了</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104164652486.png" alt="image-20260104164652486"></p>
+<p>这一步是要简化推导过程，删掉一些没啥用的中间规则，消除这类规则的目的是为了减少推导步骤，使文法更加简洁高效。</p>
+<ul>
+<li>依次对每一个非终结符A 构造一个集合 代表这个非终结符可以推到的非终结符</li>
+<li>然后看这个集合，假如这个集合中有元素可以推到句子，就直接加上A-句子 这个规则</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104170252535.png" alt="image-20260104170252535"></p>
+<p>其目的是将文法中递推到空串的规则去掉，同时保证文法所定义的语言保持不变。</p>
+<ul>
+<li>和2.2差不多 首先找能推出空串的非终结符号 化成集合，然后递归找相关的扩充</li>
+<li>删去这些空规则</li>
+<li>然后在已有规则里找一下集合里的非终结符，全删掉</li>
+<li>扩充新规则，假如之前是A - BC 但是C推出来空 那么就改成A - BC | C</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104170335688.png" alt="image-20260104170335688"></p>
+<p>在构建语法分析器（特别是自上而下的 LL 预测分析器）时，左递归会导致程序陷入死循环。为了解决这个问题，我们需要将左递归规则转换为等价的右递归规则。</p>
+<ul>
+<li>这个例子很明显了，首先如果不递归 左边一定是a</li>
+<li>那么我们先把a写好 再用一个A‘ 来完成后续的递归b</li>
+</ul>
+<p>扩充BNF表示法</p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104173955136.png" alt="image-20260104173955136"></p>
+<p>可以用于消除左递归</p>
+<h3 id="文法和语言的Chomsky分类"><a href="#文法和语言的Chomsky分类" class="headerlink" title="文法和语言的Chomsky分类"></a>文法和语言的Chomsky分类</h3><ul>
+<li><p><strong>3型文法</strong>：正规文法，正则文法</p>
+<ul>
+<li>限制最严，规则左侧只能是一个非终结符，右侧必须是一个终结符&#x2F;终结符后跟一个非终结符（左线性或右线性）</li>
+<li>对于每一个左(右)线性文法，都存在一个与某等价的右(左)线性文法</li>
+<li>与词法有关的文法一般属于3型文法</li>
+</ul>
+</li>
+<li><p><strong>2型文法</strong>：程序设计文法，上下文无关文法，下推自动机PDA</p>
+<ul>
+<li>左侧只能有一个非终结符，右侧可以是终结符和非终结符的任意组合。</li>
+<li>替换非终结符时不需要考虑前后字符<ul>
+<li>描述语法结构</li>
+<li>可以描述栈，所以可以处理嵌套结构，构成下推自动机</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>1型文法</strong>：上下文相关文法</p>
+<ul>
+<li>要求产生式右边字符串长度不小于左边，替换符号必须在特定上下文环境中进行</li>
+<li>线性有界自动机LBA</li>
+</ul>
+</li>
+<li><p><strong>0型文法</strong>：无限制文法，短语结构文法</p>
+<ul>
+<li>没有任何限制，左侧只要包含一个非终结符即可。</li>
+<li>递归可枚举语言</li>
+<li>图灵机</li>
+</ul>
+</li>
+<li><p>0-3限制逐渐增加，描述语言能力逐渐减弱</p>
+<ul>
+<li>1型号不允许A-e 但是2-3允许</li>
+</ul>
+</li>
+<li><p>四种语言可分别被四种自动机接收</p>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104175137162.png" alt="image-20260104175137162"></p>
+<h2 id="3-自动机理论基础"><a href="#3-自动机理论基础" class="headerlink" title="3.自动机理论基础"></a>3.自动机理论基础</h2><h3 id="有限自动机"><a href="#有限自动机" class="headerlink" title="有限自动机"></a>有限自动机</h3><p>自动机从识别语言出发，定义了语言。自动机是具有离散输入&#x2F;出系统的一种数学模型</p>
+<ul>
+<li>文法：是从产生语言的角度定义了语言。</li>
+<li>自动机理论：是编译程序词法分析的理论基础。</li>
+</ul>
+<p>首先定义自动机</p>
+<ul>
+<li>状态转换图：定义在字母表上的有向图，满足三个初始条件：<ul>
+<li><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104195119849.png" alt="image-20260104195119849"></li>
+</ul>
+</li>
+<li><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260104202849834.png" alt="image-20260104202849834"></li>
+</ul>
+<p>可以用这个图识别句子：从开始状态到终止状态经过的边上的符号序列。</p>
+<p>有限自动机FA</p>
+<ul>
+<li><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260105132308984.png" alt="image-20260105132308984"></p>
+<ul>
+<li>没有栈 没有寄存器，只存储当前状态</li>
+<li><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260105142142547.png" alt="image-20260105142142547"></li>
+</ul>
+</li>
+<li><p>确定性有限自动机 DFA</p>
+</li>
+<li><p>非确定性有限自动机 NFA</p>
+</li>
+</ul>
+<p>写到这里 我决定面向押题学习了</p>
+<h1 id="————————————————————分割线——————————————————————"><a href="#————————————————————分割线——————————————————————" class="headerlink" title="————————————————————分割线——————————————————————"></a>————————————————————分割线——————————————————————</h1><h2 id="FIRST-FOLLOW集"><a href="#FIRST-FOLLOW集" class="headerlink" title="FIRST FOLLOW集"></a>FIRST FOLLOW集</h2><h3 id="一、-FIRST-集的求法"><a href="#一、-FIRST-集的求法" class="headerlink" title="一、 FIRST 集的求法"></a>一、 FIRST 集的求法</h3><p><strong>FIRST 集</strong>的意义是：从非终结符开始推导，可能出现在字符串开头的第一个<strong>终结符</strong>的集合。</p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260106142934782.png" alt="image-20260106142934782"></p>
+<h3 id="二、-FOLLOW-集的求法"><a href="#二、-FOLLOW-集的求法" class="headerlink" title="二、 FOLLOW 集的求法"></a>二、 FOLLOW 集的求法</h3><p><strong>FOLLOW 集</strong>的意义是：在某个句型中，紧跟在非终结符 A 后面可能出现的<strong>终结符</strong>的集合。</p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260106142940871.png" alt="image-20260106142940871"></p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260106191615768.png" alt="image-20260106191615768"></p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260106200807972.png" alt="image-20260106200807972"></p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107103959401.png" alt="image-20260107103959401"></p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107104049991.png" alt="image-20260107104049991"></p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107105640459.png" alt="image-20260107105640459"></p>
+<p>产生移进规约冲突 就不是LR0 直接SLR1 规约规约就看</p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107105835514.png" alt="image-20260107105835514"></p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107105743885.png" alt="image-20260107105743885"></p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107123417697.png" alt="image-20260107123417697"></p>
+<h1 id="LL1："><a href="#LL1：" class="headerlink" title="LL1："></a>LL1：</h1><p>先优化文法，然后求first follow select 然后画表格 然后对输入串进行求解</p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107132642591.png" alt="image-20260107132642591"></p>
+<h1 id="DFA-NFA"><a href="#DFA-NFA" class="headerlink" title="DFA NFA"></a>DFA NFA</h1><p>先优化表达式 然后画图，状态推导，最小化（小包大</p>
+<h1 id="LR0-SLR1"><a href="#LR0-SLR1" class="headerlink" title="LR0 SLR1"></a>LR0 SLR1</h1><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107132846824.png" alt="image-20260107132846824"></p>
+<p>SLR 先求follow集 再擦掉不在集里的r</p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107132831741.png" alt="image-20260107132831741"></p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107133205604.png" alt="image-20260107133205604"></p>
+<h1 id="LR1"><a href="#LR1" class="headerlink" title="LR1"></a>LR1</h1><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260107133359144.png" alt="image-20260107133359144"></p>
+<p>LALR 合并同心</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/Friends/">Friends</a></li>
+        
+          <li><a href="/Search/">Search</a></li>
+        
+          <li><a href="/About/">About</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">1. 引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80"><span class="toc-number">2.</span> <span class="toc-text">2. 形式语言理论基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">2.1.</span> <span class="toc-text">形式语言基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E4%B8%B2%E8%BF%90%E7%AE%97"><span class="toc-number">2.1.1.</span> <span class="toc-text">符号串运算</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%B3%95%E5%92%8C%E8%AF%AD%E8%A8%80%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%AE%9A%E4%B9%89"><span class="toc-number">2.2.</span> <span class="toc-text">文法和语言的形式定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%91%E5%92%8C%E4%BA%8C%E4%B9%89%E6%80%A7"><span class="toc-number">2.3.</span> <span class="toc-text">语法树和二义性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%B3%95%E5%92%8C%E8%AF%AD%E8%A8%80%E7%9A%84Chomsky%E5%88%86%E7%B1%BB"><span class="toc-number">2.4.</span> <span class="toc-text">文法和语言的Chomsky分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%87%AA%E5%8A%A8%E6%9C%BA%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80"><span class="toc-number">3.</span> <span class="toc-text">3.自动机理论基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E9%99%90%E8%87%AA%E5%8A%A8%E6%9C%BA"><span class="toc-number">3.1.</span> <span class="toc-text">有限自动机</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E5%88%86%E5%89%B2%E7%BA%BF%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94"><span class="toc-number"></span> <span class="toc-text">————————————————————分割线——————————————————————</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#FIRST-FOLLOW%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">FIRST FOLLOW集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-FIRST-%E9%9B%86%E7%9A%84%E6%B1%82%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">一、 FIRST 集的求法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-FOLLOW-%E9%9B%86%E7%9A%84%E6%B1%82%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">二、 FOLLOW 集的求法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LL1%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">LL1：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DFA-NFA"><span class="toc-number"></span> <span class="toc-text">DFA NFA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LR0-SLR1"><span class="toc-number"></span> <span class="toc-text">LR0 SLR1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LR1"><span class="toc-number"></span> <span class="toc-text">LR1</span></a>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&text=编译原理期末复习"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&title=编译原理期末复习"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&is_video=false&description=编译原理期末复习"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=编译原理期末复习&body=Check out this article: https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&title=编译原理期末复习"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&title=编译原理期末复习"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&title=编译原理期末复习"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&title=编译原理期末复习"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&name=编译原理期末复习&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lancer0rz.github.io/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/&t=编译原理期末复习"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2026
+    l4n
+  </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/Friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/Search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/About/">About</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>

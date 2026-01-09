@@ -11,7 +11,7 @@
     <meta name="description" content="z 最近想重拾一下pwn，发现wsl环境炸了gdb起不来。加上杂七杂八的环境非常的杂乱，遂重装，顺便记录一下踩坑过程。 卸载这个简单 12wsl --list wsl --unregister Ubuntu-22.03  因为我之前已经设置了wsl的安装系统存储位置，如有需要请参照下面链接Win10&#x2F;11下安装WSL并修改WSL默认安装目录到其他盘_wsl设置默认路径-CSDN博客 重新">
 <meta property="og:type" content="article">
 <meta property="og:title" content="wsl-ubuntu 个人环境配置指南">
-<meta property="og:url" content="http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:url" content="https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/index.html">
 <meta property="og:site_name" content="l4n&#39;s blog">
 <meta property="og:description" content="z 最近想重拾一下pwn，发现wsl环境炸了gdb起不来。加上杂七杂八的环境非常的杂乱，遂重装，顺便记录一下踩坑过程。 卸载这个简单 12wsl --list wsl --unregister Ubuntu-22.03  因为我之前已经设置了wsl的安装系统存储位置，如有需要请参照下面链接Win10&#x2F;11下安装WSL并修改WSL默认安装目录到其他盘_wsl设置默认路径-CSDN博客 重新">
 <meta property="og:locale" content="en_US">
@@ -108,17 +108,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&text=wsl-ubuntu 个人环境配置指南"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&is_video=false&description=wsl-ubuntu 个人环境配置指南"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
-  <li><a class="icon" href="mailto:?subject=wsl-ubuntu 个人环境配置指南&body=Check out this article: http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&name=wsl-ubuntu 个人环境配置指南&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&t=wsl-ubuntu 个人环境配置指南"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&text=wsl-ubuntu 个人环境配置指南"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&is_video=false&description=wsl-ubuntu 个人环境配置指南"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=wsl-ubuntu 个人环境配置指南&body=Check out this article: https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&name=wsl-ubuntu 个人环境配置指南&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&t=wsl-ubuntu 个人环境配置指南"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
 </ul>
 
     </div>
@@ -268,17 +268,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&text=wsl-ubuntu 个人环境配置指南"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&is_video=false&description=wsl-ubuntu 个人环境配置指南"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
-  <li><a class="icon" href="mailto:?subject=wsl-ubuntu 个人环境配置指南&body=Check out this article: http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&name=wsl-ubuntu 个人环境配置指南&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
-  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://lancerorz.top/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&t=wsl-ubuntu 个人环境配置指南"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&text=wsl-ubuntu 个人环境配置指南"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&is_video=false&description=wsl-ubuntu 个人环境配置指南"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=wsl-ubuntu 个人环境配置指南&body=Check out this article: https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&title=wsl-ubuntu 个人环境配置指南"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&name=wsl-ubuntu 个人环境配置指南&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lancer0rz.github.io/2025/07/23/wsl-ubuntu-%E4%B8%AA%E4%BA%BA%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/&t=wsl-ubuntu 个人环境配置指南"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
 </ul>
 
     </div>
@@ -301,7 +301,7 @@
     <!-- Copyright --> &copy;
     
     
-    2018-2025
+    2018-2026
     l4n
   </div>
   
