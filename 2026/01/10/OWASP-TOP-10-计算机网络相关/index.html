@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="baidu-site-verification" content="codeva-OBVxxxxx" />
+    <meta name="msvalidate.01" content="B9019CE3751A15D6xxxxxxxxxxxxxxxx" />
+    <meta name="description" content="协议HTTP&#x2F;HTTPS HTTP  请求响应结构  起始行：方法（get post）路径 版本 头部：键值对，元数据（user-Agent Cookie Host） 主题body：实际数据   常见方法  GET 从服务器获取资源，?id&#x3D;1 POST 向服务器提交数据。参数放在body里，更安全   状态码  1xx 信息性响应 2xx 成功 200  OK 3xx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学">
+<meta property="og:url" content="https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/index.html">
+<meta property="og:site_name" content="l4n&#39;s blog">
+<meta property="og:description" content="协议HTTP&#x2F;HTTPS HTTP  请求响应结构  起始行：方法（get post）路径 版本 头部：键值对，元数据（user-Agent Cookie Host） 主题body：实际数据   常见方法  GET 从服务器获取资源，?id&#x3D;1 POST 向服务器提交数据。参数放在body里，更安全   状态码  1xx 信息性响应 2xx 成功 200  OK 3xx">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260110231254346.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260110232034302.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260110232132853.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260110232310875.png">
+<meta property="article:published_time" content="2026-01-10T10:10:17.000Z">
+<meta property="article:modified_time" content="2026-01-11T05:05:01.162Z">
+<meta property="article:author" content="l4n">
+<meta property="article:tag" content="安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260110231254346.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/avatar.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/avatar.jpg" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpg">
+        
+      
+    
+    <!-- title -->
+    <title>web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="modal" class="modal">
+  <span id="modal_close_btn" class="modal-close-btn">x</span>
+  <img id="modal_image" class="modal-image">
+  <!-- <div id="caption"></div> -->
+</div>
+
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/Friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/Search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/About/">About</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2026/01/11/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%AE%89%E5%85%A8%E6%A2%B3%E7%90%86-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2026/01/02/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&text=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&title=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&is_video=false&description=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学&body=Check out this article: https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&title=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&title=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-reddit " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&title=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&title=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-digg " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&name=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&t=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.</span> <span class="toc-text">协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-HTTPS"><span class="toc-number">1.0.1.</span> <span class="toc-text">HTTP&#x2F;HTTPS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OWASP-TOP-10"><span class="toc-number">2.</span> <span class="toc-text">OWASP TOP 10</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#XSS"><span class="toc-number">2.0.1.</span> <span class="toc-text">XSS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CSRF"><span class="toc-number">2.0.2.</span> <span class="toc-text">CSRF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSRF"><span class="toc-number">2.0.3.</span> <span class="toc-text">SSRF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="toc-number">2.0.4.</span> <span class="toc-text">SQL注入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6"><span class="toc-number">3.</span> <span class="toc-text">密码学</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AES"><span class="toc-number">3.0.1.</span> <span class="toc-text">AES</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86-V-S-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="toc-number">3.0.2.</span> <span class="toc-text">对称加密 V.S 非对称加密</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">l4n</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2026-01-10T10:10:17.000Z" class="dt-published" itemprop="datePublished">2026-01-10</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <!-- <div class="article-tag"> -->
+    <div class="article-category">
+        <i class="fa-solid fa-tag"></i>
+        <!-- <a class="p-category" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a> -->
+        <a class="category-link" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <ul>
+<li></li>
+</ul>
+<h2 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h2><h4 id="HTTP-HTTPS"><a href="#HTTP-HTTPS" class="headerlink" title="HTTP&#x2F;HTTPS"></a>HTTP&#x2F;HTTPS</h4><ul>
+<li><p><strong>HTTP</strong></p>
+<ul>
+<li><p>请求响应结构</p>
+<ul>
+<li>起始行：方法（get post）路径 版本</li>
+<li>头部：键值对，元数据（user-Agent Cookie Host）</li>
+<li>主题body：实际数据</li>
+</ul>
+</li>
+<li><p>常见方法</p>
+<ul>
+<li>GET 从服务器获取资源，?id&#x3D;1</li>
+<li>POST 向服务器提交数据。参数放在body里，更安全</li>
+</ul>
+</li>
+<li><p>状态码</p>
+<ul>
+<li>1xx 信息性响应</li>
+<li>2xx 成功 200  OK</li>
+<li>3xx 重定向 301 永久移动 302 临时移动</li>
+<li>4xx 客户端错误 403 forbidden 无权限 404notfound 对应资源找不到</li>
+<li>5xx 服务器错误 500 Internal Server Error 后端崩溃 502 Bad Gateway 错误网关&#x2F;连接超时</li>
+</ul>
+</li>
+<li><p>流量结构</p>
+<ul>
+<li><p>请求结构</p>
+<ul>
+<li><p>请求行，请求头，空行，请求体</p>
+</li>
+<li><pre><code>POST /api/v1/login HTTP/1.1              &lt;-- 1. 请求行 (Method, Path, Version)
+Host: example.com                        &lt;-- 2. 请求头 (Headers)
+Content-Type: application/json
+Content-Length: 27
+User-Agent: Mozilla/5.0
+                                         &lt;-- 3. 空行 (CRLF, \r\n)
+&#123;&quot;username&quot;:&quot;admin&quot;,&quot;pw&quot;:&quot;123&quot;&#125;          &lt;-- 4. 请求体 (Body)
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  - 请求行：</span><br><span class="line"></span><br><span class="line">    - Method (方法)： `GET` (获取), `POST` (提交), `PUT` (更新), `DELETE` (删除), `OPTIONS` (预检)。</span><br><span class="line">    - Path (路径)： 目标资源的 URL 路径及查询参数。</span><br><span class="line">    - Version (版本)： `HTTP/1.1` 或 `HTTP/2`。</span><br><span class="line"></span><br><span class="line">  - 请求头： 键值对形式，告知服务器客户端的环境、预期的格式（Accept）、认证信息（Cookie/Authorization）等。</span><br><span class="line"></span><br><span class="line">  - 空行： 必须存在，用于标识 Header 结束和 Body 开始。</span><br><span class="line"></span><br><span class="line">  - 请求体： 实际传输的数据。`GET` 请求通常没有 Body。</span><br><span class="line"></span><br><span class="line">- 响应结构</span><br><span class="line"></span><br><span class="line">  - ```</span><br><span class="line">    HTTP/1.1 200 OK                          &lt;-- 1. 状态行 (Version, Status Code, Phrase)</span><br><span class="line">    Date: Sat, 10 Jan 2026 14:00:00 GMT      &lt;-- 2. 响应头</span><br><span class="line">    Server: Apache</span><br><span class="line">    Content-Type: text/html; charset=UTF-8</span><br><span class="line">    Content-Length: 155</span><br><span class="line">                                             &lt;-- 3. 空行</span><br><span class="line">    &lt;html&gt;                                   &lt;-- 4. 响应体</span><br><span class="line">      &lt;body&gt;Hello World&lt;/body&gt;</span><br><span class="line">    &lt;/html&gt;</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>关键Header</p>
+<ul>
+<li><strong>Cookie &#x2F; Set-Cookie：</strong> 维持会话状态，是 CSRF 和会话劫持的核心。</li>
+<li><strong>Referer &#x2F; Origin：</strong> 标识请求来源，常用于 CSRF 防御。</li>
+<li><strong>User-Agent：</strong> 客户端特征，常用于爬虫识别或漏洞精准投放。</li>
+<li><strong>Content-Length &#x2F; Transfer-Encoding：</strong> 涉及 <strong>HTTP 请求走私 (Request Smuggling)</strong> 漏洞的关键字段。</li>
+<li><strong>X-Forwarded-For：</strong> 标识原始 IP（在经过代理&#x2F;负载均衡时），常被用于绕过 IP 限制。</li>
+</ul>
+</li>
+<li><p>流程</p>
+<ul>
+<li><p>输入<a target="_blank" rel="noopener" href="http://www.baidu.com/123">http://www.baidu.com/123</a> 后 发生了：</p>
+</li>
+<li><p>DNS解析</p>
+<ul>
+<li>浏览器缓存——操作系统缓存——路由器缓存——ISP递归DNS。。。</li>
+<li>可能发生DNS劫持</li>
+</ul>
+</li>
+<li><p>建立连接（TCP三次握手</p>
+<ul>
+<li><strong>SYN:</strong> 客户端：“你好，我想连接你（序号 x）。”</li>
+<li><strong>SYN-ACK:</strong> 服务端：“收到，我也准备好了（序号 y，确认号 x+1）。”</li>
+<li><strong>ACK:</strong> 客户端：“太好了，那我们开始吧（确认号 y+1）。”</li>
+</ul>
+</li>
+<li><p>发送HTTP请求</p>
+<ul>
+<li><pre><code>GET /api/user HTTP/1.1
+Host: http://www.baidu.com/123
+Cookie: session_id=12345
+User-Agent: Mozilla/5.0...
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>服务器处理并返回响应</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>HTTPS</strong></p>
+<ul>
+<li><p>HTTP是明文传输的，意味着任何中间人都能看到密码等敏感数据</p>
+<ul>
+<li><p>HTTPS解决了以下问题：</p>
+<ul>
+<li><p><strong>机密性 (Confidentiality):</strong> 内容加密，中间人看不懂。</p>
+</li>
+<li><p><strong>完整性 (Integrity):</strong> 内容不可篡改，改了就会被发现。</p>
+</li>
+<li><p><strong>身份认证 (Authentication):</strong> 证明你访问的确实是真正的目标网站，而不是钓鱼网站。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>流程</p>
+<ul>
+<li>在三次握手之后 进行TLS握手<ul>
+<li>Client发送支持的加密列表和随机数A</li>
+<li>Server发送选择好的加密算法，数字证书和随机数B</li>
+</ul>
+</li>
+<li>证书校验<ul>
+<li>浏览器检查证书是否过期，域名是否匹配，CA签名是否合法</li>
+<li>证书包含CA的数字签名 使用CA的公钥解密能解开才通过完整性校验</li>
+</ul>
+</li>
+<li>生成预主密钥<ul>
+<li>浏览器从证书中获取公钥，生成随机数C 用公钥加密后发送给服务器</li>
+</ul>
+</li>
+<li>生成会话密钥Session key<ul>
+<li>现在都有ABC 双方通过协商好的算法 把这三个混合成一个会话密钥</li>
+</ul>
+</li>
+<li>开始对称加密通信<ul>
+<li>使用这个会话密钥加密http数据 进行传输</li>
+<li>先用非对称协商密钥 再用对称快速通信</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="OWASP-TOP-10"><a href="#OWASP-TOP-10" class="headerlink" title="OWASP TOP 10"></a>OWASP TOP 10</h2><h4 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h4><ul>
+<li>Cross Site Scripting 网站中注入恶意脚本 导致浏览器执行任意代码（通常JS<ul>
+<li>反射型：服务端直接返回到html，存储在url参数里</li>
+<li>存储型：存到数据库里，服务端读取后返回到html，危害大</li>
+<li>DOM型：不经过服务端，客户端js&#x2F;url localstorage解析时触发</li>
+</ul>
+</li>
+<li>钓鱼 内网探测 配合CSRF 劫持表单 盗取cookie等</li>
+<li>防御：<ul>
+<li>输出转义，HTML实体编码</li>
+<li>HttpOnly：禁止JS读取cookie 防止窃取</li>
+<li>内容安全CSP：限制域名白名单，禁止内敛脚本等</li>
+<li>输入验证</li>
+</ul>
+</li>
+</ul>
+<h4 id="CSRF"><a href="#CSRF" class="headerlink" title="CSRF"></a>CSRF</h4><ul>
+<li>Cross-site Request Forgery 跨站请求伪造<ul>
+<li>核心是网站对用户浏览器的信任，攻击者诱导受害者访问一个恶意页面，该页面利用浏览器<strong>自动携带cookie</strong>的特性来获取cookie 导致盗号等，本质是利用用户权限来进行非法操作</li>
+</ul>
+</li>
+<li>防御<ul>
+<li>Anti-CSRF token 服务器嵌入一个随机生成的token，客户端请求时必须携带该token。攻击者无法获取这个token 无法伪造请求</li>
+<li>属性：将Cookie设置为<code>SameSite=Lax</code> 或 <code>Strict</code>，限制第三方网站请求携带 Cookie。</li>
+<li>验证Referer&#x2F;Origin：检查请求来源是否可信（可以主动隐藏，<meta name="referrer" content="no-referrer"> ）https跳http也会丢失referrer</li>
+<li>二次验证，短信验证码&#x2F;支付密码</li>
+</ul>
+</li>
+</ul>
+<h4 id="SSRF"><a href="#SSRF" class="headerlink" title="SSRF"></a>SSRF</h4><ul>
+<li>Server-Side Request Forgery 服务端请求伪造<ul>
+<li>核心原理是：攻击者利用服务端提供了“从外部获取资源”的功能（如图片上传、URL 预览），伪造请求让<strong>服务器去访问其内网资源</strong>。<br> <strong>攻击目标：</strong> 绕过防火墙，探测服务器所在的内部网络、读取敏感配置文件、攻击内网其他脆弱服务。</li>
+</ul>
+</li>
+<li>防御<ul>
+<li>黑名单 白名单限制协议，域名，ip等</li>
+<li>验证内网ip</li>
+<li>防止DNS重绑定：直接对校验过的ip发起连接</li>
+<li>网络隔离：业务服务器和内网隔离</li>
+</ul>
+</li>
+</ul>
+<h4 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h4><ul>
+<li>数据与命令未分离，用户输入直接拼接进SQL语句里导致的非法执行<ul>
+<li>联合注入 UNION SELECT</li>
+<li>报错注入</li>
+<li>盲注：布尔盲注 时间盲注</li>
+<li>宽字节注入<ul>
+<li><strong>原理</strong>：当后端使用 <code>addslashes</code> 等函数转义单引号时（<code>&#39;</code> 变为 <code>\&#39;</code>），如果数据库编码是 <strong>GBK</strong>，攻击者输入 <code>%df%27</code>。转义后变成 <code>%df%5c%27</code>。由于 GBK 认为 <code>%df%5c</code> 是一个汉字，导致反斜杠被“吃掉”，单引号逃逸。</li>
+<li><strong>防御</strong>：使用 <code>mysql_set_charset(&#39;gbk&#39;)</code> 统一字符集，或直接使用 <strong>预编译</strong>。</li>
+</ul>
+</li>
+<li>二次注入<ul>
+<li><strong>原理</strong>：第一步攻击者输入的恶意数据经过转义存储到了数据库中（此时是安全的）。第二步，程序再次调用该数据并<strong>拼接到另一个 SQL 语句</strong>中执行，此时恶意数据生效。</li>
+<li><strong>防御</strong>：永远不要信任从数据库里取出的数据，<strong>二次调用时依然要进行预编译或转义</strong>。</li>
+</ul>
+</li>
+<li><strong>所有参数都可以预编译吗？</strong><ul>
+<li><strong>不可以！</strong> 预编译只能处理 <strong>占位符（Data Literal）</strong>。</li>
+<li><strong>无法预编译的场景</strong>：<code>ORDER BY [字段名]</code>、<code>GROUP BY</code>、<code>LIMIT</code>、表名、列名。</li>
+<li><strong>解决方案</strong>：这些位置必须使用 <strong>白名单</strong> 校验，或强制类型检查</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>现在哪还有sql注入啊。。</li>
+</ul>
+<h2 id="密码学"><a href="#密码学" class="headerlink" title="密码学"></a>密码学</h2><h4 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h4><ul>
+<li>分组密码，每次处理16字节</li>
+<li>工作模式<ul>
+<li>ECB 每个块独立加密，可以明文统计</li>
+<li>CBC 每个块与前一个密文块xor 再加密</li>
+<li>CTR 对一个递增的计数器加密 再与明文xor （iv不可重复</li>
+<li>GCM ：CTR+GMAC消息验证码，有密文防篡改 推荐使用</li>
+</ul>
+</li>
+</ul>
+<h4 id="对称加密-V-S-非对称加密"><a href="#对称加密-V-S-非对称加密" class="headerlink" title="对称加密 V.S 非对称加密"></a>对称加密 V.S 非对称加密</h4><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260110231254346.png" alt="image-20260110231254346"></p>
+<ul>
+<li><p>非对称加密主要依靠复杂的数学难题（大数分解，椭圆曲线点运算）来实现</p>
+<ul>
+<li>C &#x3D; E_publickey(P),   P &#x3D; D_privatekey(C)</li>
+</ul>
+</li>
+<li><p>RSA</p>
+<ul>
+<li>基于大数分解</li>
+<li>至少需要2048位才安全</li>
+<li>核心步骤<ul>
+<li>选两个超大质数pq 计算n &#x3D; pq</li>
+<li>计算phi(n) &#x3D; (p-1)(q-1)</li>
+<li>公钥e 与phi(n)互质</li>
+<li>计算 e 关于phi(n) 的模反元素私钥d <img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260110232034302.png" alt="image-20260110232034302"></li>
+<li>这样就有了公钥对n e 私钥对n d</li>
+<li><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260110232132853.png" alt="image-20260110232132853"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>ECC</p>
+<ul>
+<li><p>定义曲线：例如常见的 y^2 &#x3D; x^3 + ax + b。</p>
+<p>基点 G：曲线上一个已知的点。</p>
+<p>私钥 k：一个巨大的随机数。</p>
+<p>公钥 K：通过“标量乘法”计算出的点 K &#x3D; kG。</p>
+</li>
+</ul>
+</li>
+<li><p>Diffie-Hellman</p>
+<ul>
+<li><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260110232310875.png" alt="image-20260110232310875"></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/Friends/">Friends</a></li>
+        
+          <li><a href="/Search/">Search</a></li>
+        
+          <li><a href="/About/">About</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.</span> <span class="toc-text">协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-HTTPS"><span class="toc-number">1.0.1.</span> <span class="toc-text">HTTP&#x2F;HTTPS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OWASP-TOP-10"><span class="toc-number">2.</span> <span class="toc-text">OWASP TOP 10</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#XSS"><span class="toc-number">2.0.1.</span> <span class="toc-text">XSS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CSRF"><span class="toc-number">2.0.2.</span> <span class="toc-text">CSRF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSRF"><span class="toc-number">2.0.3.</span> <span class="toc-text">SSRF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="toc-number">2.0.4.</span> <span class="toc-text">SQL注入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6"><span class="toc-number">3.</span> <span class="toc-text">密码学</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AES"><span class="toc-number">3.0.1.</span> <span class="toc-text">AES</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86-V-S-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="toc-number">3.0.2.</span> <span class="toc-text">对称加密 V.S 非对称加密</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&text=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&title=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&is_video=false&description=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li> -->
+  <li><a class="icon" href="mailto:?subject=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学&body=Check out this article: https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&title=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&title=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&title=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&title=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&name=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li> -->
+  <!-- <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lancer0rz.github.io/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/&t=web漏洞扫盲 &amp;&amp; 计算机网络相关 &amp;&amp; 密码学"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li> -->
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    <!-- Copyright --> &copy;
+    
+    
+    2018-2026
+    l4n
+  </div>
+  
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/Friends/">Friends</a></li><!--
+     --><!--
+       --><li><a href="/Search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/About/">About</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- 51la Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- image modal -->
+<script>
+  (function() {
+    var contentNode = document.getElementsByClassName('content e-content');
+    if (!contentNode || contentNode.length === 0) {
+      console.log('no content, exit');
+      return;
+    }
+
+    var imgsNodes = contentNode[0].getElementsByTagName('img');
+    if (!imgsNodes || imgsNodes.length === 0) {
+      console.log('no image, exit');
+      return;
+    }
+
+    var span = document.getElementById('modal_close_btn');
+    span.onclick = function() { 
+      modal.style.display = "none";
+    };
+
+    var modal = document.getElementById('modal');
+    var modalImage = document.getElementById('modal_image');
+    var captionText = document.getElementById('caption');
+
+    for (var i = imgsNodes.length - 1; i >= 0; i--) {
+      let image = imgsNodes[i];
+      image.onclick = function() {
+        modal.style.display = "block";
+        modalImage.src = this.src;
+        captionText.innerHTML = this.alt || "文章配图";
+      };
+    }
+  }());
+</script>
+
+</body>
+</html>
