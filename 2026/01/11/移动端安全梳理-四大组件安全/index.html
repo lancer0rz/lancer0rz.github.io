@@ -8,18 +8,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="baidu-site-verification" content="codeva-OBVxxxxx" />
     <meta name="msvalidate.01" content="B9019CE3751A15D6xxxxxxxxxxxxxxxx" />
-    <meta name="description" content="1 前置知识APP沙箱机制android基于linux内核借鉴了uid机制  appA无法访问app B的私有目录 每个app有一个唯一uid，拥有独立虚拟机（ART&#x2F;Daivik） SELinux DAC自主访问控制 MAC强制访问控制   Binder 共享UID等漏洞  Android启动流程 [Android启动过程-万字长文(Android14) - 柳云居士 - 博客园](h">
+    <meta name="description" content="前置知识APP沙箱机制android基于linux内核借鉴了uid机制  appA无法访问app B的私有目录 每个app有一个唯一uid，拥有独立虚拟机（ART&#x2F;Daivik） SELinux DAC自主访问控制 MAC强制访问控制   Binder 共享UID等漏洞  Android启动流程 [Android启动过程-万字长文(Android14) - 柳云居士 - 博客园](htt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="移动端安全梳理-四大组件安全">
 <meta property="og:url" content="https://lancer0rz.github.io/2026/01/11/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%AE%89%E5%85%A8%E6%A2%B3%E7%90%86-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/index.html">
 <meta property="og:site_name" content="l4n&#39;s blog">
-<meta property="og:description" content="1 前置知识APP沙箱机制android基于linux内核借鉴了uid机制  appA无法访问app B的私有目录 每个app有一个唯一uid，拥有独立虚拟机（ART&#x2F;Daivik） SELinux DAC自主访问控制 MAC强制访问控制   Binder 共享UID等漏洞  Android启动流程 [Android启动过程-万字长文(Android14) - 柳云居士 - 博客园](h">
+<meta property="og:description" content="前置知识APP沙箱机制android基于linux内核借鉴了uid机制  appA无法访问app B的私有目录 每个app有一个唯一uid，拥有独立虚拟机（ART&#x2F;Daivik） SELinux DAC自主访问控制 MAC强制访问控制   Binder 共享UID等漏洞  Android启动流程 [Android启动过程-万字长文(Android14) - 柳云居士 - 博客园](htt">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260111152409789.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260111210517047.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/activity_lifecycle.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_SEK8YFRNTN3AYFB.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_EV7J3X865V3ABAW.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_MVZXUT6TBSK5KQU.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_PX6UGEV9HMMWTBV.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_92EXMEKYH5VR3J2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_WHA5BS39WRBY5G3.png">
 <meta property="article:published_time" content="2026-01-11T05:02:44.000Z">
-<meta property="article:modified_time" content="2026-01-11T08:54:29.654Z">
+<meta property="article:modified_time" content="2026-01-11T13:10:15.951Z">
 <meta property="article:author" content="l4n">
 <meta property="article:tag" content="安全">
 <meta name="twitter:card" content="summary">
@@ -129,7 +135,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E6%B2%99%E7%AE%B1%E6%9C%BA%E5%88%B6"><span class="toc-number">1.0.1.</span> <span class="toc-text">APP沙箱机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.2.</span> <span class="toc-text">Android启动流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.3.</span> <span class="toc-text">APP安装过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#App%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.4.</span> <span class="toc-text">App运行流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Binder"><span class="toc-number">1.0.5.</span> <span class="toc-text">Binder</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Bundle"><span class="toc-number">1.0.6.</span> <span class="toc-text">Bundle</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#intent"><span class="toc-number">1.0.7.</span> <span class="toc-text">intent</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Context"><span class="toc-number">1.0.8.</span> <span class="toc-text">Context</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Activity"><span class="toc-number">2.</span> <span class="toc-text">Activity</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">攻击面</span></a></li></ol></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E6%B2%99%E7%AE%B1%E6%9C%BA%E5%88%B6"><span class="toc-number">1.0.1.</span> <span class="toc-text">APP沙箱机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.2.</span> <span class="toc-text">Android启动流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.3.</span> <span class="toc-text">APP安装过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#App%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.4.</span> <span class="toc-text">App运行流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Binder"><span class="toc-number">1.0.5.</span> <span class="toc-text">Binder</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Bundle"><span class="toc-number">1.0.6.</span> <span class="toc-text">Bundle</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#intent"><span class="toc-number">1.0.7.</span> <span class="toc-text">intent</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Context"><span class="toc-number">1.0.8.</span> <span class="toc-text">Context</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="toc-number">1.0.9.</span> <span class="toc-text">权限管理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Activity"><span class="toc-number">2.</span> <span class="toc-text">Activity</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">攻击面</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Service"><span class="toc-number">2.0.1.</span> <span class="toc-text">Service</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Broadcast"><span class="toc-number">2.0.2.</span> <span class="toc-text">Broadcast</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Content-Provider"><span class="toc-number">2.0.3.</span> <span class="toc-text">Content Provider</span></a></li></ol></li></ol></li></ol>
       </div>
     
   </span>
@@ -176,8 +182,7 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <p>1</p>
-<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h4 id="APP沙箱机制"><a href="#APP沙箱机制" class="headerlink" title="APP沙箱机制"></a>APP沙箱机制</h4><p>android基于linux内核借鉴了uid机制</p>
+    <h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h4 id="APP沙箱机制"><a href="#APP沙箱机制" class="headerlink" title="APP沙箱机制"></a>APP沙箱机制</h4><p>android基于linux内核借鉴了uid机制</p>
 <ul>
 <li>appA无法访问app B的私有目录</li>
 <li>每个app有一个唯一uid，拥有独立虚拟机（ART&#x2F;Daivik）</li>
@@ -268,6 +273,8 @@
 </li>
 <li>长生命周期对象获取短生命周期context 就可能导致内存泄露</li>
 </ul>
+<h4 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h4><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260111210517047.png" alt="image-20260111210517047"></p>
+<p>有一些自定义安全 签名什么的 如果能够找到某种方法去bypass这些权限 就可以完成利用</p>
 <h2 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h2><h5 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h5><ul>
 <li><p>生命周期</p>
 </li>
@@ -321,7 +328,142 @@
 <p>LanuchAnyWhere</p>
 <ul>
 <li>调起任意未导出的activity</li>
-<li>原理：AccountManager账户管理器类，</li>
+<li>原理：AccountManager账户管理器类允许APP注册自己的账户类型<ul>
+<li>如果A调用addAccount 选择了恶意app，恶意app会返回一个Bundle</li>
+<li>正常逻辑下，这里是要返回一个添加账户的intent 但恶意app会返回一个任意intent</li>
+<li>然后Settings调用这个intent 由于是system权限 可以进行任意未到出的activity的调用</li>
+</ul>
+</li>
+<li>修复：<ul>
+<li>在<strong>AppB</strong>返回<code>Bundle</code>给<strong>AppA</strong>时检查其中的<code>Intent</code> 指向组件的签名是否与AppB签名一致</li>
+<li>但是可以通过parcalable反序列化来绕过，通过精确的布局，使得<code>system_server</code>在检查<code>Intent</code>时找不到这个<code>Intent</code>，而在错位后<code>Settings</code>却刚好可以找到，这样就可以实现补丁的绕过并再次实现<code>LaunchAnyWhere</code>，研究人员将发现的这种漏洞利用方式命名为<code>**Bundle mismatch**</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h4><p>服务，挂在后台执行长时间操作 不提供用户界面</p>
+<ul>
+<li>startservice启动<ul>
+<li>启动后无限期运行，直到它自己调用 <code>stopSelf()</code> 或被其他组件调用 <code>stopService()</code>终止。</li>
+<li>回调：onStartCommand</li>
+</ul>
+</li>
+<li>Bound service<ul>
+<li>提供一个 <strong>Client-Server</strong> 接口 启动组件持有service的binder句柄，实时调用service的方法。</li>
+<li>所有客户端解除绑定后自动销毁</li>
+<li>回调：onBind()，返回一个ibinder对象</li>
+</ul>
+</li>
+<li>保活<ul>
+<li>自定义系统服务</li>
+<li>前台服务</li>
+<li>第三方库</li>
+<li>双service轮询拉起</li>
+</ul>
+</li>
+<li>进程优先级<ul>
+<li>前台进程</li>
+<li>可见进程。对用户可见，但是不能交互的Activity和绑定在上面的service</li>
+<li>服务进程</li>
+<li>后台进程</li>
+<li>空进程</li>
+</ul>
+</li>
+<li>漏洞<ul>
+<li><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_EV7J3X865V3ABAW.png" alt="image-20210908160946499"></li>
+<li>权限提升<ul>
+<li>假如我们注册一个服务来做某种操作，这个服务注册的权限是很高的 但是由于app设计问题 可以接受外部应用以某种方式调起这个service，来执行非预期的操作，这样就是一个越权</li>
+</ul>
+</li>
+<li>service劫持<ul>
+<li>隐式启动service，当存在同名service的时候，先安装的service优先级要更高</li>
+</ul>
+</li>
+<li>消息伪造<ul>
+<li>暴露的service对外接受intent，导致可能的构造intent引起的攻击</li>
+</ul>
+</li>
+<li>DoS<ul>
+<li>没处理异常导致的，代码没写好</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>防御<ul>
+<li>私有服务不导出</li>
+<li>对来源app进行签名校验</li>
+<li>数据谨慎处理，回调的地方做检验</li>
+</ul>
+</li>
+</ul>
+<h4 id="Broadcast"><a href="#Broadcast" class="headerlink" title="Broadcast"></a>Broadcast</h4><p>广播，主要分广播发送者，接收者，消息中心。<br>主要用于一种全局的通信，更加敏捷，异步</p>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_MVZXUT6TBSK5KQU.png" alt="img"></p>
+<p>流程</p>
+<ul>
+<li>首先定义一个BroadcastReceiver，并重写onRecvice()方法，在里面可以实现具体操作，然后到消息中心AMS注册</li>
+<li>广播发送者定义并向AMS发送广播</li>
+<li>AMS查找符合相应条件（IntentFilter<code>/</code>Permission等）的BroadcastReceiver</li>
+<li>AMS将广播发送到上述符合条件的BroadcastReceiver相应的消息循环队列中</li>
+<li>BroadcastReceiver通过消息循环执行拿到此广播，回调BroadcastReceiver中的onReceive()方法。</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_PX6UGEV9HMMWTBV.png" alt="image-20210912155436267"></p>
+<ul>
+<li>BroadcastReceiver是四大组件之一，这个组件涉及：广播发送者和广播接收者，这里的广播实际上指的是intent<br>当发送一个广播时，系统会将发送的广播(intent)与系统中所有注册的符合条件的接IntentFilter进行匹配，匹配成功，则执行相应的onReceive函数<br>发送广播时，如果处理不当，恶意应用便可以嗅探，拦截广播，致使敏感数据泄露，接收广播时处理不当，便会导致拒绝服务攻击、伪造消息、越权操作等</li>
+<li>敏感信息泄露<ul>
+<li>如果包含敏感信息的广播没有明确指定接收者，我们注册一个恶意的接收者 符合匹配，就可以窃取到敏感数据</li>
+</ul>
+</li>
+<li>权限绕过<ul>
+<li>原理：可以通过两种方式注册广播接收器，一种是在AndroidManifest.xml文件中通过<receiver>标签静态注册，另一种是通过Context.registerReceiver()动态注册，指定相应的intentFilter参数，动态注册的广播默认都是导出的，如果导出的BroadcastReceiver没有做权限控制，导致BroadcastReceiver组件可以接收一个外部可控的url、或者其他命令，导致攻击者可以越权利用应用的一些特定功能，比如发送恶意广播、伪造消息、任意应用下载安装、打开钓鱼网站等</li>
+</ul>
+</li>
+<li>消息伪造<ul>
+<li>暴露的Receiver对外接收Intent，如果构造恶意的消息放在Intent中传输，被调用的Receiver接收可能产生安全隐患</li>
+<li>钓鱼什么的</li>
+</ul>
+</li>
+<li>拒绝服务<ul>
+<li>如果敏感的BroadcastReceiver没有设置相应的权限保护，很容易受到攻击。最常见的是拒绝服务攻击。拒绝服务攻击指的是，传递恶意畸形的intent数据给广播接收器，广播接收器无法处理异常导致crash。<br>拒绝服务攻击的危害视具体业务场景而定，比如一个安全防护产品的拒绝服务、锁屏应用的拒绝服务、支付进程的拒绝服务等危害就是巨大的。</li>
+</ul>
+</li>
+</ul>
+<p>防御</p>
+<ul>
+<li><p>私有广播接收器设置exported<code>=</code>’false’,并且不配置intent<code>-</code>filter&#96;&#96;。(私有广播接收器依然能接收到同UID的广播)。</p>
+<p>对接收来的广播进行验证。</p>
+<p>内部app之间的广播使用protectionLevel<code>=</code>’signature’ 验证其是否真是内部app。</p>
+<p>返回结果时需注意接收app是否会泄露信息。</p>
+<p>发送的广播包含敏感信息时需指定广播接收器，使用显示意图或者setPackage(String packageName)。</p>
+<p>使用LocalBroadcastManager。</p>
+</li>
+</ul>
+<h4 id="Content-Provider"><a href="#Content-Provider" class="headerlink" title="Content Provider"></a>Content Provider</h4><p>内容提供者，负责数据治理，封装一些底层数据源，向外部提供增删改查的接口。</p>
+<ul>
+<li><p>定位数据使用内容URI</p>
+<ul>
+<li><p>定义：Uniform Resource Identifier，即统一资源标识符</p>
+<p>作用：唯一标识ContentProvider &amp;其中的数据</p>
+<p>外界进程通过URL找到对应的ContentProvider &amp;其中数据，再进行数据操作</p>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_92EXMEKYH5VR3J2.png" alt="img"></p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_WHA5BS39WRBY5G3.png" alt="image-20210922104352070"></p>
+</li>
+<li><p>sql注入</p>
+<ul>
+<li>实现query等方法时 content:&#x2F;&#x2F;com.victim.provider&#x2F;user&#x2F;1 OR 1&#x3D;1这种可能导致注入</li>
+</ul>
+</li>
+<li><p>信息泄露</p>
+<ul>
+<li>content URI是一个标志provider中的数据的URI。Content URI中包含了整个provider的以符号表示的名字(它的authority)和指向一个表的名字(一个路径)。<br>当你调用一个客户端的方法来操作一个provider中的一个表，指向表的contentURI是参数之一，如果对ContentProvider的权限没有做好控制，就有可能导致恶意的程序通过这种方式读取APP的敏感数据。</li>
+</ul>
+</li>
+<li><p>目录遍历</p>
+<ul>
+<li>访问目录就会有这种情况 可能有任意文件读取这一类的问题</li>
+</ul>
+</li>
 </ul>
 
   </div>
@@ -352,7 +494,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E6%B2%99%E7%AE%B1%E6%9C%BA%E5%88%B6"><span class="toc-number">1.0.1.</span> <span class="toc-text">APP沙箱机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.2.</span> <span class="toc-text">Android启动流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.3.</span> <span class="toc-text">APP安装过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#App%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.4.</span> <span class="toc-text">App运行流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Binder"><span class="toc-number">1.0.5.</span> <span class="toc-text">Binder</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Bundle"><span class="toc-number">1.0.6.</span> <span class="toc-text">Bundle</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#intent"><span class="toc-number">1.0.7.</span> <span class="toc-text">intent</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Context"><span class="toc-number">1.0.8.</span> <span class="toc-text">Context</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Activity"><span class="toc-number">2.</span> <span class="toc-text">Activity</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">攻击面</span></a></li></ol></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E6%B2%99%E7%AE%B1%E6%9C%BA%E5%88%B6"><span class="toc-number">1.0.1.</span> <span class="toc-text">APP沙箱机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.2.</span> <span class="toc-text">Android启动流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.3.</span> <span class="toc-text">APP安装过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#App%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.4.</span> <span class="toc-text">App运行流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Binder"><span class="toc-number">1.0.5.</span> <span class="toc-text">Binder</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Bundle"><span class="toc-number">1.0.6.</span> <span class="toc-text">Bundle</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#intent"><span class="toc-number">1.0.7.</span> <span class="toc-text">intent</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Context"><span class="toc-number">1.0.8.</span> <span class="toc-text">Context</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="toc-number">1.0.9.</span> <span class="toc-text">权限管理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Activity"><span class="toc-number">2.</span> <span class="toc-text">Activity</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">攻击面</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Service"><span class="toc-number">2.0.1.</span> <span class="toc-text">Service</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Broadcast"><span class="toc-number">2.0.2.</span> <span class="toc-text">Broadcast</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Content-Provider"><span class="toc-number">2.0.3.</span> <span class="toc-text">Content Provider</span></a></li></ol></li></ol></li></ol>
       </div>
     
 
