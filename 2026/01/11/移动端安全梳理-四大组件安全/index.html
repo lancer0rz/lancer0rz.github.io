@@ -8,18 +8,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="baidu-site-verification" content="codeva-OBVxxxxx" />
     <meta name="msvalidate.01" content="B9019CE3751A15D6xxxxxxxxxxxxxxxx" />
-    <meta name="description" content="1">
+    <meta name="description" content="1 前置知识APP沙箱机制android基于linux内核借鉴了uid机制  appA无法访问app B的私有目录 每个app有一个唯一uid，拥有独立虚拟机（ART&#x2F;Daivik） SELinux DAC自主访问控制 MAC强制访问控制   Binder 共享UID等漏洞  Android启动流程 [Android启动过程-万字长文(Android14) - 柳云居士 - 博客园](h">
 <meta property="og:type" content="article">
 <meta property="og:title" content="移动端安全梳理-四大组件安全">
 <meta property="og:url" content="https://lancer0rz.github.io/2026/01/11/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%AE%89%E5%85%A8%E6%A2%B3%E7%90%86-%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6%E5%AE%89%E5%85%A8/index.html">
 <meta property="og:site_name" content="l4n&#39;s blog">
-<meta property="og:description" content="1">
+<meta property="og:description" content="1 前置知识APP沙箱机制android基于linux内核借鉴了uid机制  appA无法访问app B的私有目录 每个app有一个唯一uid，拥有独立虚拟机（ART&#x2F;Daivik） SELinux DAC自主访问控制 MAC强制访问控制   Binder 共享UID等漏洞  Android启动流程 [Android启动过程-万字长文(Android14) - 柳云居士 - 博客园](h">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260111152409789.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/activity_lifecycle.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_SEK8YFRNTN3AYFB.png">
 <meta property="article:published_time" content="2026-01-11T05:02:44.000Z">
-<meta property="article:modified_time" content="2026-01-11T05:05:35.535Z">
+<meta property="article:modified_time" content="2026-01-11T08:54:29.654Z">
 <meta property="article:author" content="l4n">
 <meta property="article:tag" content="安全">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260111152409789.png">
     
     
       
@@ -92,6 +96,8 @@
     <span id="actions">
       <ul>
         
+        <li><a class="icon" aria-label="Previous post" href="/2026/01/11/linux%E9%9D%A2%E7%BB%8F/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
         
         <li><a class="icon" aria-label="Next post" href="/2026/01/10/OWASP-TOP-10-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
@@ -123,7 +129,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"></span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E6%B2%99%E7%AE%B1%E6%9C%BA%E5%88%B6"><span class="toc-number">1.0.1.</span> <span class="toc-text">APP沙箱机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.2.</span> <span class="toc-text">Android启动流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.3.</span> <span class="toc-text">APP安装过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#App%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.4.</span> <span class="toc-text">App运行流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Binder"><span class="toc-number">1.0.5.</span> <span class="toc-text">Binder</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Bundle"><span class="toc-number">1.0.6.</span> <span class="toc-text">Bundle</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#intent"><span class="toc-number">1.0.7.</span> <span class="toc-text">intent</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Context"><span class="toc-number">1.0.8.</span> <span class="toc-text">Context</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Activity"><span class="toc-number">2.</span> <span class="toc-text">Activity</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">攻击面</span></a></li></ol></li></ol></li></ol></li></ol>
       </div>
     
   </span>
@@ -171,7 +177,153 @@
 
   <div class="content e-content" itemprop="articleBody">
     <p>1</p>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h4 id="APP沙箱机制"><a href="#APP沙箱机制" class="headerlink" title="APP沙箱机制"></a>APP沙箱机制</h4><p>android基于linux内核借鉴了uid机制</p>
+<ul>
+<li>appA无法访问app B的私有目录</li>
+<li>每个app有一个唯一uid，拥有独立虚拟机（ART&#x2F;Daivik）</li>
+<li>SELinux<ul>
+<li>DAC自主访问控制 MAC强制访问控制</li>
+</ul>
+</li>
+<li>Binder 共享UID等漏洞</li>
+</ul>
+<h4 id="Android启动流程"><a href="#Android启动流程" class="headerlink" title="Android启动流程"></a>Android启动流程</h4><ul>
+<li>[Android启动过程-万字长文(Android14) - 柳云居士 - 博客园](<a target="_blank" rel="noopener" href="https://www.cnblogs.com/anywherego/p/18221943#:~:text=1">https://www.cnblogs.com/anywherego/p/18221943#:~:text=1</a> 1.引导加载程序（Bootloader）启动： 当设备上电或者重启时，首先会由引导加载程序负责启动。 … 2 2.内核加载： 引导加载程序会根据预定义的配置从设备存储中加载操作系统内核。 …,6 6.启动系统服务： 在Zygote进程启动后，还会启动一系列系统服务，例如SurfaceFlinger、ActivityManager、PackageManager等。 … 7 7.启动桌面程序： 一旦系统服务启动完成，Android系统就处于可用状态。 )<ul>
+<li>首先启动BootLoader，引导加载程序首先启动，对硬件及内核做初始化，加载内核到内存</li>
+<li>内核加载：根据预定义的配置加载操作系统内核</li>
+<li>内核初始化，初始化硬件，建立虚拟文件系统，创建进程和线程</li>
+<li>启动init进程，内核初始化完成后，启动init用户空间进程，读取系统配置文件，然后启动一些系统服务和应用</li>
+<li>启动Zygote进程，android应用程序孵化器，预加载常用的java类和资源</li>
+<li>启动系统服务：ActivityManager等，管理显示，包管理，生命周期管理等</li>
+<li>启动桌面：上述系统服务启动完成 就启动桌面，开机成功</li>
+</ul>
+</li>
+</ul>
+<h4 id="APP安装过程"><a href="#APP安装过程" class="headerlink" title="APP安装过程"></a>APP安装过程</h4><p><strong>system&#x2F;app</strong> 存放系统自带的应用程序</p>
+<p><strong>data&#x2F;app</strong> 用户程序安装的目录</p>
+<p><strong>data&#x2F;data</strong> 存放应用程序的数据</p>
+<ol>
+<li>复制APK安装包到data&#x2F;app目录下</li>
+<li>解压并扫描安装包，把dex文件(Dalvik字节码)保存到dalvik-cache目录</li>
+<li>在data&#x2F;data目录下创建对应的应用数据目录</li>
+</ol>
+<h4 id="App运行流程"><a href="#App运行流程" class="headerlink" title="App运行流程"></a>App运行流程</h4><ol>
+<li>BootClassLoader加载系统核心库</li>
+<li>PathClassLoader加载App自身dex</li>
+<li>进入App自身组件开始执行</li>
+<li>调用Application的attachBaseContext</li>
+<li>调用Application的onCreate</li>
+</ol>
+<h4 id="Binder"><a href="#Binder" class="headerlink" title="Binder"></a>Binder</h4><p>android中 进程间通信主要使用Binder，只需要一次拷贝</p>
+<ul>
+<li>Cilent发起请求 Server提供服务</li>
+<li>Service Manager 管理服务，查找Server</li>
+<li>Binder Driver负责数据转发 内存映射 权限检查</li>
+<li>原理：<ul>
+<li>内存映射mmap。首先开辟一块接受缓存区</li>
+<li>然后驱动调用mmap 将Server进程的用户空间 和 内核缓存区映射到同一款物理内存</li>
+<li>Client发送数据，拷贝到内核缓存区，这样Server就可以直接读</li>
+</ul>
+</li>
+<li>代理模式<ul>
+<li>AIDL运行，Proxy，parcel对象打包</li>
+<li>Parcel：为IPC设计的序列化容器 可能有反序列化风险</li>
+</ul>
+</li>
+</ul>
+<h4 id="Bundle"><a href="#Bundle" class="headerlink" title="Bundle"></a>Bundle</h4><p>一个为String key 和Parcalable类型值设计的类型安全映射，非常像Java里的HashMap 但其实是为了IPC来高度优化过的</p>
+<ul>
+<li>内部持有一个Parcel，是一个高级封装</li>
+<li>跨进程传输遵守Lazy Unparcelling</li>
+<li>CVE-2017-13315 由于 <strong>懒拆包</strong> 机制，如果发送端（App A）和接收端（App B）使用的 <code>Parcelable</code> 对象定义不一致，或者 Android 系统框架对某个类型的解析逻辑有 Bug，就会产生“错位”。</li>
+</ul>
+<h4 id="intent"><a href="#intent" class="headerlink" title="intent"></a>intent</h4><ul>
+<li>组件交互的方式，携带数据，动作等重要敏感信息，起到一个游走的作用</li>
+<li>启动Activity，service，发送广播</li>
+<li>Intent有多个构造函数的重载，Intent（Context packageContext,Class&lt;?&gt; <code>cls</code>）</li>
+<li>分为显式intent 隐式intent<ul>
+<li>显式打开：明确指定Component 具体类名<br>Intent intent <code>=` `new Intent(MainActivity.</code>class<code>,SecondActivity.</code>class<code>); </code>&#x2F;<code>/</code>实例化Intent对象<br>intent.putExtra(<code>&quot;et1&quot;</code>,et1Str); <code>/</code>&#x2F;<code>使用putExtra传递参数，参数</code>1<code>：键名 参数</code>2<code>：键对应的值 我们可以使用intent.getStringExtra(</code>“et1”<code>)获取传递的参数 startActivity(intent); </code>&#x2F;<code>/</code>启动Intent，完成从MainActivity类跳转到SecondActivity类</li>
+<li>隐式打开 不指定组件名，只声明 Action、Data 和 Category，由系统分析找到合适的Activity并打开<br>在androidManifest中指定action和category，每次添加action只能一个，但是可以多个category<ul>
+<li>可以打开程序外activity（url</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h4><ul>
+<li>一个抽象类，主要完成两个主要任务：<ul>
+<li>访问应用资源，获取资产，图片，包名 classloder等</li>
+<li>调用系统服务，启动activiy，发送广播，检查权限，获取系统级服务</li>
+</ul>
+</li>
+<li>生命周期<ul>
+<li><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/image-20260111152409789.png" alt="image-20260111152409789"></li>
+</ul>
+</li>
+<li>底层原理：进程信息+资源索引+token<ul>
+<li>ContextImpl，继承自context 实现了startActivity等方法</li>
+<li>不同组件通过ContextWrapper包装</li>
+<li>鉴权也要走这里</li>
+</ul>
+</li>
+<li>长生命周期对象获取短生命周期context 就可能导致内存泄露</li>
+</ul>
+<h2 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h2><h5 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h5><ul>
+<li><p>生命周期</p>
+</li>
+<li><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/activity_lifecycle.png" alt="img"></p>
+</li>
+</ul>
+<p><strong>onCreate()：</strong></p>
+<ul>
+<li>必须实现，当然也是对activity进行逆向的核心破局点</li>
+<li>Activity第一次创建时调用</li>
+</ul>
+<p>**onStart()：**Activity置于栈顶可见但无焦点状态时调用</p>
+<p>**onRestart()：**Activity再次回到栈顶可见时调用</p>
+<p>**onResume()【活动状态】：**在Activity可见并且有焦点时调用</p>
+<p>**onPause()：**发生中断时（准备启动或者恢复另一个activity时）调用，进入暂停状态。可以编写一些保存现场或者释放资源的操作。【该Activity仍然用户可见】</p>
+<p>**onStop()：**Activity不再对用户可见时调用</p>
+<p>**onDestory()：**Activity销毁时调用</p>
+<ul>
+<li>打开新Activity。原Activity: onPause()–&gt;onStop()</li>
+<li>回到原Activity。onRestart()–&gt;onStart()–&gt;onResume()</li>
+</ul>
+<p><strong>四种启动模式</strong></p>
+<ul>
+<li>Standard 先进后出 放入栈顶</li>
+<li>SingleTop 栈顶复用<ul>
+<li>如果顶部不存在这个Activity 就新建 放入栈顶</li>
+<li>如果存在 就调用示例的onNewIntent方法传送intent 不创建新示例</li>
+</ul>
+</li>
+<li>SingleTask 栈内复用模式&#x2F;单任务模式 就是一个栈里只有一个任务</li>
+<li>SingleInstance 单例模式 <ul>
+<li>Singletask的升级版，系统直接创建一个新的返回栈并创建Activity的新实例置于新Task返回栈中</li>
+</ul>
+</li>
+</ul>
+<h5 id="攻击面"><a href="#攻击面" class="headerlink" title="攻击面"></a>攻击面</h5><p><img src="https://raw.githubusercontent.com/lancer0rz/Picture/main/blog/905443_SEK8YFRNTN3AYFB.png" alt="image-20210905185725812"></p>
+<p>Activity的组件导出，一般会导致的问题：Android Browser Intent Scheme URLs的攻击手段</p>
+<ul>
+<li>拒绝服务攻击：通过Intent给Activity传输畸形数据使得程序崩溃从而影响用户体验</li>
+<li>越权攻击：Activity用户界面绕过会造成用户信息窃取、Activity界面被劫持产生欺诈等安全事件<ul>
+<li>设置export &#x3D; true 或者添加intent filter这样的属性且没有做鉴权，会导致其他app可以调用</li>
+</ul>
+</li>
+<li>组件导出导致钓鱼欺诈&#x2F;activity劫持<ul>
+<li>activity覆盖等手法</li>
+<li>PendingIntent劫持重定向</li>
+</ul>
+</li>
+<li>隐式启动intent包含敏感数据</li>
+</ul>
+<p>LanuchAnyWhere</p>
+<ul>
+<li>调起任意未导出的activity</li>
+<li>原理：AccountManager账户管理器类，</li>
+</ul>
+
   </div>
 </article>
 
@@ -200,7 +352,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"></span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E6%B2%99%E7%AE%B1%E6%9C%BA%E5%88%B6"><span class="toc-number">1.0.1.</span> <span class="toc-text">APP沙箱机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.2.</span> <span class="toc-text">Android启动流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#APP%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.3.</span> <span class="toc-text">APP安装过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#App%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.0.4.</span> <span class="toc-text">App运行流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Binder"><span class="toc-number">1.0.5.</span> <span class="toc-text">Binder</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Bundle"><span class="toc-number">1.0.6.</span> <span class="toc-text">Bundle</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#intent"><span class="toc-number">1.0.7.</span> <span class="toc-text">intent</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Context"><span class="toc-number">1.0.8.</span> <span class="toc-text">Context</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Activity"><span class="toc-number">2.</span> <span class="toc-text">Activity</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="toc-number">2.0.0.2.</span> <span class="toc-text">攻击面</span></a></li></ol></li></ol></li></ol></li></ol>
       </div>
     
 
